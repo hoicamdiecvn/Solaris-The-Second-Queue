@@ -1,6 +1,6 @@
-import { Client, GatewayIntentBits } from 'discord.js';
+import {Client, Collection, GatewayIntentBits} from 'discord.js';
 import { config } from './config.js';
-import pingCommand from "./commands/ping.js";
+import registerCommands from "./structures/register_command.js";
 
 // Khởi tạo Client với các quyền hạn cụ thể
 const client = new Client({
@@ -11,13 +11,20 @@ const client = new Client({
     ],
 });
 
+// Đẩy lệnh vào
+registerCommands(client);
+
 // Khi bot đăng nhập thành công và sẵn sàng hoạt động
 client.once('ready', () => {
     if (client.user) {
         console.log(`Logged in as: ${client.user.tag}`);
+
+        const commandCount = (client as any).commands.size;
+        console.log(`[Hệ thống] Bot đang hoạt động với tổng cộng: ${commandCount} lệnh (/).`);
+        const commandNames = Array.from((client as any).commands.keys()).map(name => `/${name}`).join(', ');
+        console.log(`[Danh sách] Các lệnh sẵn sàng: ${commandNames}`);
     }
 });
-
 
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
@@ -27,8 +34,18 @@ client.on('messageCreate', (message) => {
 // Gõ Lệnh
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-    if (interaction.commandName === 'ping') {
-        await pingCommand.execute(interaction);
+    const command = (client as any).commands.get(interaction.commandName);
+    if (!command) return console.error(`Không tìm thấy lệnh ${interaction.commandName} trong bộ nhớ bot.`);
+
+    try {
+        await command.execute(interaction);
+    } catch (error) {
+        console.error(`Lỗi khi thực thi lệnh ${interaction.commandName}:`, error);
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({ content: 'Đã có lỗi xảy ra khi chạy lệnh này!', flags: [MessageFlags.Ephemeral] });
+        } else {
+            await interaction.reply({ content: 'Đã có lỗi xảy ra khi chạy lệnh này!', flags: [MessageFlags.Ephemeral] });
+        }
     }
 });
 

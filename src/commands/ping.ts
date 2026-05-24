@@ -1,10 +1,5 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-
-// Định nghĩa cấu trúc Object này để ép kiểu cho chặt chẽ
-interface DiscordCommand {
-    data: SlashCommandBuilder;
-    execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
-}
+import { SlashCommandBuilder } from 'discord.js';
+import type { DiscordCommand } from "../structures/types.js";
 
 const pingCommand: DiscordCommand = {
     data: new SlashCommandBuilder()
