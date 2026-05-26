@@ -2,8 +2,6 @@ import { REST, Routes } from 'discord.js';
 import { config } from './config.js';
 import {getCommands} from "./utils/commands_path.js";
 
-const applicationId = process.env.APPLICATION_ID;
-
 const rest = new REST({ version: '10' }).setToken(config.token);
 (async () => {
     try {
