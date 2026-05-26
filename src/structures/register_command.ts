@@ -1,12 +1,10 @@
 import {Collection} from "discord.js";
-import pingCommand from "../commands/ping.js";
-import personalInfo from "../commands/personal_info.js";
-import helpCommand from "../commands/help.js";
+import { getCommands } from "../utils/commands_path.js";
 
-function registerCommands(botClient: any) {
+async function registerCommands(botClient: any) {
     botClient.commands = new Collection();
-    const commandList = [pingCommand, personalInfo, helpCommand];
-    for (const command of commandList) {
+    const commands = await getCommands();
+    for (const command of commands) {
         botClient.commands.set(command.data.name, command);
     }
 }
