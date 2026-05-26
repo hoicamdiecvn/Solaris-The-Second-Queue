@@ -1,25 +1,17 @@
 import { REST, Routes } from 'discord.js';
 import { config } from './config.js';
-import pingCommand from "./commands/ping.js";
-import personalInfo from "./commands/personal_info.js";
-import helpCommand from "./commands/help.js";
-
-// Gom tất cả data của các lệnh vào một mảng JSON
-const commands = [
-    pingCommand.data.toJSON(),
-    personalInfo.data.toJSON(),
-    helpCommand.data.toJSON()
-];
+import {getCommands} from "./utils/commands_path.js";
 
 const rest = new REST({ version: '10' }).setToken(config.token);
 (async () => {
     try {
-        console.log(`Làm mới ${commands.length} lệnh (/) ứng dụng...`);
+        const commands = await getCommands();
+        const deployData = commands.map(cmd => cmd.data.toJSON());
         await rest.put(
             Routes.applicationCommands(config.applicationId),
-            { body: commands },
+            { body: deployData },
         );
-        console.log('Cập nhật thành công');
+        console.log(`Cập nhật thành công ${deployData.length} lệnh`);
     } catch (error) {
         console.error('Lỗi khi deploy lệnh:', error);
     }
