@@ -1,4 +1,4 @@
-import {Client, Collection, GatewayIntentBits} from 'discord.js';
+import {Client, GatewayIntentBits, MessageFlags} from 'discord.js';
 import { config } from './config.js';
 import registerCommands from "./structures/register_command.js";
 
@@ -27,7 +27,7 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', (message) => {
-    if (message.author.bot) return;
+    if (message.author.bot || !message.inGuild()) return;
     console.log(`[${message.channel.name}] ${message.author.tag}: ${message.content}`);
 });
 
