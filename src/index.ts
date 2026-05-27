@@ -1,6 +1,27 @@
 import {Client, Collection, GatewayIntentBits} from 'discord.js';
 import { config } from './config.js';
 import registerCommands from "./structures/register_command.js";
+import fs from 'node:fs';
+import path from 'node:path';
+import { getLogState } from './utils/logState.js';
+
+// Đảm bảo thư mục logs tồn tại
+const logsDir = path.resolve(process.cwd(), 'logs');
+if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+}
+const logFilePath = path.join(logsDir, 'chat.log');
+
+function getFormattedTimestamp(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 // Khởi tạo Client với các quyền hạn cụ thể
 const client = new Client({
@@ -28,8 +49,24 @@ client.once('clientReady', () => {
 
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
-    const channelName = 'name' in message.channel ? message.channel.name : 'DM';
-    console.log(`[${channelName}] ${message.author.tag}: ${message.content}`);
+
+    if (getLogState()) {
+        const timestamp = getFormattedTimestamp();
+        const serverName = message.guild ? message.guild.name : 'Direct Message';
+        const channelName = 'name' in message.channel ? message.channel.name : 'DM';
+        const username = message.author.tag;
+        const content = message.content;
+
+        const logLine = `[${timestamp}] [${serverName}] [${channelName}] [${username}]: ${content}`;
+
+        fs.appendFile(logFilePath, logLine + '\n', (err) => {
+            if (err) {
+                console.error('[LOG ERROR] Lỗi khi ghi vào file log:', err);
+            }
+        });
+
+        console.log(logLine);
+    }
 });
 
 // Gõ Lệnh
