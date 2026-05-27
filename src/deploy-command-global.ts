@@ -16,7 +16,7 @@ const rest = new REST({ version: '10' }).setToken(config.token);
     try {
         console.log(`Làm mới ${commands.length} lệnh (/) ứng dụng...`);
         await rest.put(
-            Routes.applicationCommands(process.env.APPLICATION_ID),
+            Routes.applicationCommands(config.applicationId),
             { body: commands },
         );
         console.log('Cập nhật thành công');

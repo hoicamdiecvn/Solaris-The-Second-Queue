@@ -15,7 +15,7 @@ const client = new Client({
 registerCommands(client);
 
 // Khi bot đăng nhập thành công và sẵn sàng hoạt động
-client.once('ready', () => {
+client.once('clientReady', () => {
     if (client.user) {
         console.log(`Logged in as: ${client.user.tag}`);
 
@@ -28,7 +28,8 @@ client.once('ready', () => {
 
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
-    console.log(`[${message.channel.name}] ${message.author.tag}: ${message.content}`);
+    const channelName = 'name' in message.channel ? message.channel.name : 'DM';
+    console.log(`[${channelName}] ${message.author.tag}: ${message.content}`);
 });
 
 // Gõ Lệnh
@@ -42,9 +43,9 @@ client.on('interactionCreate', async (interaction) => {
     } catch (error) {
         console.error(`Lỗi khi thực thi lệnh ${interaction.commandName}:`, error);
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'Đã có lỗi xảy ra khi chạy lệnh này!', flags: [MessageFlags.Ephemeral] });
+            await interaction.followUp({ content: 'Đã có lỗi xảy ra khi chạy lệnh này!', ephemeral: true });
         } else {
-            await interaction.reply({ content: 'Đã có lỗi xảy ra khi chạy lệnh này!', flags: [MessageFlags.Ephemeral] });
+            await interaction.reply({ content: 'Đã có lỗi xảy ra khi chạy lệnh này!', ephemeral: true });
         }
     }
 });

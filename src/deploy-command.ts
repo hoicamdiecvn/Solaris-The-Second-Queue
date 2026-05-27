@@ -16,10 +16,10 @@ const rest = new REST({ version: '10' }).setToken(config.token);
         console.log(`Làm mới ${commands.length} lệnh (/) ứng dụng...`);
         for (const guild of guildIds) {
             await rest.put(
-                Routes.applicationCommands(process.env.APPLICATION_ID, guildIds),
+                Routes.applicationGuildCommands(config.applicationId, guild),
                 {body: commands},
             );
-            console.log(`Các server được cập nhật gồm: ${guildId}`)
+            console.log(`Các server được cập nhật gồm: ${guild}`)
         }
         console.log('Cập nhật thành công vào các server chỉ định');
     } catch (error) {
