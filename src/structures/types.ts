@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ContextMenuCommandBuilder, ChatInputCommandInteraction, SlashCommandBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
 
 export interface DiscordCommand {
-    data: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
-    execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
+    data: SlashCommandBuilder | ContextMenuCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+    execute: (interaction: ChatInputCommandInteraction | MessageContextMenuCommandInteraction | any) => Promise<void>;
 }
