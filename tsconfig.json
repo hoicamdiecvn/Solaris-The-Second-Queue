@@ -31,5 +31,5 @@
     "allowSyntheticDefaultImports": true
   },
   // Chỉ định rõ cho compiler chỉ quét và dịch code trong folder src
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "index.ts"]
 }

@@ -1,6 +1,6 @@
 import {Client, GatewayIntentBits, MessageFlags} from 'discord.js';
-import { config } from './config.js';
-import registerCommands from "./structures/register_command.js";
+import { config } from './src/config.js';
+import registerCommands from "./src/structures/register_command.js";
 
 // Khởi tạo Client với các quyền hạn cụ thể
 const client = new Client({
