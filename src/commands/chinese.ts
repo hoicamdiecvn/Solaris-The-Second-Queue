@@ -5,7 +5,7 @@ import { sendLanguageAnalysisTabs } from '../structures/language_tabs.js';
 
 const japanese: DiscordCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('Phân tích Nhật Ngữ')
+        .setName('Phân tích Tiếng Trung')
         .setType(ApplicationCommandType.Message),
     
     async execute(interaction) {
@@ -18,19 +18,19 @@ const japanese: DiscordCommand = {
         await interaction.deferReply({ ephemeral: true });
         
         try {
-            const { data: aiData, modelUsed } = await analyzeTextWithGemini(messageContent, 'src/prompts/japanese_prompt.txt'); 
+            const { data: aiData, modelUsed } = await analyzeTextWithGemini(messageContent, 'src/prompts/chinese_prompt.txt'); 
             const formattedData = {
-                languageIcon: '🇯🇵',
-                languageName: 'tiếng Nhật',
+                languageIcon: '🇨🇳',
+                languageName: 'tiếng Trung',
                 originalText: messageContent,
                 standardizedText: aiData.standard_vietnamese,
-                translatedText: aiData.japanese_translation,
-                pronunciation: aiData.romaji,
+                translatedText: aiData.chinese_translation,
+                pronunciation: aiData.pinyin,
                 grammarList: aiData.grammar_breakdown || [],
                 vocabList: (aiData.vocabulary_to_learn || []).map((item: any) => ({
-                    mainWord: item.kanji || item.furigana || '---',
-                    subWord: item.furigana || '',
-                    meaning: item.meaning || ''
+                    mainWord: item.hanzi,
+                    subWord: item.pinyin,
+                    meaning: item.meaning
                 }))
             };
             await sendLanguageAnalysisTabs(interaction, formattedData, modelUsed);

@@ -1,6 +1,7 @@
 import {Client, GatewayIntentBits, MessageFlags} from 'discord.js';
 import { config } from './src/config.js';
 import registerCommands from "./src/structures/register_command.js";
+import { startDashboardServer } from './src/server.js';
 
 // Khởi tạo Client với các quyền hạn cụ thể
 const client = new Client({
@@ -23,6 +24,7 @@ client.once('ready', () => {
         console.log(`[Hệ thống] Bot đang hoạt động với tổng cộng: ${commandCount} lệnh (/).`);
         const commandNames = Array.from((client as any).commands.keys()).map(name => `/${name}`).join(', ');
         console.log(`[Danh sách] Các lệnh sẵn sàng: ${commandNames}`);
+        startDashboardServer();
     }
 });
 
