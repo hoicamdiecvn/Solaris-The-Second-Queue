@@ -1,4 +1,4 @@
-import {Client, GatewayIntentBits, MessageFlags} from 'discord.js';
+import {Client, GatewayIntentBits, MessageFlags, ActivityType} from 'discord.js';
 import { config } from './src/config.js';
 import registerCommands from "./src/structures/register_command.js";
 import { startDashboardServer } from './src/server.js';
@@ -24,6 +24,15 @@ client.once('ready', () => {
         console.log(`[Hệ thống] Bot đang hoạt động với tổng cộng: ${commandCount} lệnh (/).`);
         const commandNames = Array.from((client as any).commands.keys()).map(name => `/${name}`).join(', ');
         console.log(`[Danh sách] Các lệnh sẵn sàng: ${commandNames}`);
+
+        client.user.setPresence({
+            activities: [{ 
+                name: 'More -> Apps -> Solaris',
+                type: ActivityType.Playing
+            }],
+            status: 'dnd',
+        });
+        
         startDashboardServer();
     }
 });
